@@ -7,7 +7,6 @@ import android.view.inputmethod.EditorInfo
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.fragment.app.setFragmentResultListener
-import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
 import by.kirich1409.viewbindingdelegate.viewBinding
@@ -18,7 +17,6 @@ import ru.snowmaze.redsofttestproject.R
 import ru.snowmaze.redsofttestproject.databinding.FragmentProductsBinding
 import ru.snowmaze.redsofttestproject.ui.product.ProductFragment
 import ru.snowmaze.redsofttestproject.ui.utils.showText
-import java.lang.NullPointerException
 
 class ProductsFragment : Fragment(R.layout.fragment_products),
     ProductsAdapter.ProductsAdapterCallback {
@@ -107,14 +105,12 @@ class ProductsFragment : Fragment(R.layout.fragment_products),
     }
 
     override fun onAddProductCartClick(product: Product) {
-        product.countInCart++
-        viewModel.onProductChanged(product)
+        viewModel.onAddProductCart(product)
         adapter.onProductChanged(product)
     }
 
     override fun onRemoveProductCartClick(product: Product) {
-        product.countInCart--
-        viewModel.onProductChanged(product)
+        viewModel.onRemoveProductCart(product)
         adapter.onProductChanged(product)
     }
 

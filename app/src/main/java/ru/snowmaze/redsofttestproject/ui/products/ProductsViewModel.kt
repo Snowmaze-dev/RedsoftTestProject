@@ -1,11 +1,11 @@
 package ru.snowmaze.redsofttestproject.ui.products
 
 import androidx.lifecycle.*
-import kotlinx.coroutines.launch
 import ru.snowmaze.redsofttestdomain.domain.product.Product
 import ru.snowmaze.redsofttestdomain.domain.product.ProductRepository
+import ru.snowmaze.redsofttestproject.ui.ProductViewModel
 
-class ProductsViewModel(private val productsRepository: ProductRepository) : ViewModel() {
+class ProductsViewModel(productsRepository: ProductRepository) : ProductViewModel(productsRepository) {
 
     private val _products = mutableListOf<Product>()
     val products: List<Product> get() = _products
@@ -44,12 +44,6 @@ class ProductsViewModel(private val productsRepository: ProductRepository) : Vie
                 }
             })
 
-        }
-    }
-
-    fun onProductChanged(product: Product) {
-        viewModelScope.launch {
-            productsRepository.updateProduct(product)
         }
     }
 

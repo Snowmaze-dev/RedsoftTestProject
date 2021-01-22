@@ -3,7 +3,6 @@ package ru.snowmaze.redsofttestproject.ui.product
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.View
-import android.widget.Button
 import androidx.core.view.isEmpty
 import androidx.core.view.isNotEmpty
 import androidx.core.view.updateLayoutParams
@@ -73,7 +72,6 @@ class ProductFragment : Fragment(R.layout.fragment_product) {
         setFragmentResult("product_fragment", Bundle().apply {
             putSerializable("product", product)
         })
-        viewModel.onProductChanged(product)
         if (product.countInCart == 0) {
             if (binding.cartContainer.isNotEmpty()) {
                 cartBinding = null
@@ -84,6 +82,7 @@ class ProductFragment : Fragment(R.layout.fragment_product) {
             view.setOnClickListener {
                 previousInCart = product.countInCart
                 product.countInCart++
+                viewModel.onAddProductCart(product)
                 onCartCountChanged(product)
             }
         } else {
@@ -105,11 +104,13 @@ class ProductFragment : Fragment(R.layout.fragment_product) {
             cartAdd.setOnClickListener {
                 previousInCart = product.countInCart
                 product.countInCart++
+                viewModel.onAddProductCart(product)
                 onCartCountChanged(product)
             }
             cartRemove.setOnClickListener {
                 previousInCart = product.countInCart
                 product.countInCart--
+                viewModel.onRemoveProductCart(product)
                 onCartCountChanged(product)
             }
         }
