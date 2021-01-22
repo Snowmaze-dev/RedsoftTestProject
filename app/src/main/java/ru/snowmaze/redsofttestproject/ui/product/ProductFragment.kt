@@ -81,7 +81,6 @@ class ProductFragment : Fragment(R.layout.fragment_product) {
             binding.cartContainer.addView(view)
             view.setOnClickListener {
                 previousInCart = product.countInCart
-                product.countInCart++
                 viewModel.onAddProductCart(product)
                 onCartCountChanged(product)
             }
@@ -103,13 +102,11 @@ class ProductFragment : Fragment(R.layout.fragment_product) {
         with(cartBinding) {
             cartAdd.setOnClickListener {
                 previousInCart = product.countInCart
-                product.countInCart++
                 viewModel.onAddProductCart(product)
                 onCartCountChanged(product)
             }
             cartRemove.setOnClickListener {
                 previousInCart = product.countInCart
-                product.countInCart--
                 viewModel.onRemoveProductCart(product)
                 onCartCountChanged(product)
             }
