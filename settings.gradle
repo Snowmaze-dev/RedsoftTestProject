@@ -1,0 +1,4 @@
+rootProject.name = "RedsoftTestProject"
+include ':app'
+include ':data'
+include ':domain'
