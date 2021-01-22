@@ -5,7 +5,8 @@ import ru.snowmaze.redsofttestdomain.domain.product.Product
 import ru.snowmaze.redsofttestdomain.domain.product.ProductRepository
 import ru.snowmaze.redsofttestproject.ui.ProductViewModel
 
-class ProductsViewModel(productsRepository: ProductRepository) : ProductViewModel(productsRepository) {
+class ProductsViewModel(productsRepository: ProductRepository) :
+    ProductViewModel(productsRepository) {
 
     private val _products = mutableListOf<Product>()
     val products: List<Product> get() = _products
@@ -15,14 +16,16 @@ class ProductsViewModel(productsRepository: ProductRepository) : ProductViewMode
 
     fun getFirstProducts(): LiveData<Result<List<Product>>> = liveData {
         if (products.isEmpty()) {
-            try {
-                _products.addAll(productsRepository.getProducts(filter, page).toMutableList())
-            } catch (e: Exception) {
-                emit(Result.failure(e))
-                return@liveData
-            }
+            _products.addAll(
+                try {
+                    productsRepository.getProducts(filter, page, false)
+                } catch (e: Exception) {
+                    emit(Result.failure(e))
+                    productsRepository.getProducts(filter, page, true)
+                }.toMutableList()
+            )
         }
-        emit(Result.success(products))
+        emit(Result.success(_products))
         page++
     }
 
@@ -36,7 +39,7 @@ class ProductsViewModel(productsRepository: ProductRepository) : ProductViewMode
         } else this.page + 1
         return liveData {
             emit(runCatching {
-                productsRepository.getProducts(filter, page).also {
+                productsRepository.getProducts(filter, page, false).also {
                     if (it.isNotEmpty()) {
                         _products.addAll(it)
                         this@ProductsViewModel.page = page

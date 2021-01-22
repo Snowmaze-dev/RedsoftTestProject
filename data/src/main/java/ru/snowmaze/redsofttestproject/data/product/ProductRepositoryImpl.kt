@@ -10,13 +10,17 @@ internal class ProductRepositoryImpl(
     private val persistenceProductSource: PersistenceProductSource
 ) : ProductRepository {
 
-    override suspend fun getProducts(filter: String?, page: Int): List<Product> {
+    override suspend fun getProducts(filter: String?, page: Int, useCache: Boolean): List<Product> {
         val count = 15
         val productsInCart = persistenceProductSource.getProductsInCart().associateBy { it.id }
-        return remoteSource.getProducts(filter, page * count, count)
-            .map {
-                it.toDomainModel(productsInCart[it.id]?.count ?: 0)
-            }
+        return try {
+            remoteSource.getProducts(filter, page * count, count)
+        } catch (e: Exception) {
+            if (useCache) persistenceProductSource.getProducts()
+            else throw e
+        }.map {
+            it.toDomainModel(productsInCart[it.id]?.count ?: 0)
+        }
     }
 
     override suspend fun updateProduct(product: Product) {

@@ -38,9 +38,13 @@ class ProductsFragment : Fragment(R.layout.fragment_products),
             adapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
             val products = viewModel.products.toMutableList()
             if (products.isEmpty()) {
-                viewModel.getFirstProducts().observe(viewLifecycleOwner) {
-                    handleProductsResult(it)
-                    listProducts.adapter = adapter
+                listProducts.adapter = adapter
+                viewModel.getFirstProducts().observe(viewLifecycleOwner) { result ->
+                    result.fold({
+                        adapter.products = it.toMutableList()
+                    }, {
+                        showText(R.string.connection_failed)
+                    })
                 }
             } else {
                 adapter.products = products
@@ -76,7 +80,7 @@ class ProductsFragment : Fragment(R.layout.fragment_products),
                     adapter.products = it.toMutableList()
                     binding.listProducts.smoothScrollToPosition(0)
                 }, {
-                    showText(R.string.unable_to_connect)
+                    showText(R.string.connection_failed)
                 })
             }
     }
@@ -85,7 +89,6 @@ class ProductsFragment : Fragment(R.layout.fragment_products),
         result.fold({
             adapter.addProducts(it)
         }, {
-            showText(R.string.unable_to_connect)
         })
     }
 

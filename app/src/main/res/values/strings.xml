@@ -2,6 +2,6 @@
     <string name="app_name">RedsoftTestProject</string>
     <string name="product_price">%1$s ₽</string>
     <string name="product_cart_count">%1$s шт</string>
-    <string name="unable_to_connect">Не удалось подключиться к серверу</string>
+    <string name="connection_failed">Не удалось подключиться к серверу</string>
     <string name="add_to_cart">В корзину</string>
 </resources>
